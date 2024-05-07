@@ -12,4 +12,4 @@ export class UserSettings {
   receiveSMS?: boolean;
 }
 
-export const UserSettingsScema = SchemaFactory.createForClass(UserSettings);
+export const UserSettingsSchema = SchemaFactory.createForClass(UserSettings);

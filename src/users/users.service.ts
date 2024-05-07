@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Request } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/schemas/User.schema';
@@ -7,6 +7,7 @@ import { UpdateUserDto } from './dto/UpdateUser.dto';
 import { UserSettings } from 'src/schemas/UserSettings.schema';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/LoginUser.dto';
+import { log } from 'console';
 
 @Injectable()
 export class UsersService {
@@ -44,6 +45,7 @@ export class UsersService {
   deleteUser(id: string) {
     return this.userModel.findByIdAndDelete(id);
   }
+
   async login(loginUserDto: LoginUserDto) {
     const user = await this.userModel.findOne({
       login: loginUserDto.login,

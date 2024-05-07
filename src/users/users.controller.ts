@@ -55,6 +55,7 @@ export class UsersController {
     if (!updateUser) throw new HttpException('User update not found', 404);
     return updateUser;
   }
+  
   @Delete(':id')
   async deleteUser(@Param('id') id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
@@ -63,7 +64,7 @@ export class UsersController {
     if (!deletedUser) throw new HttpException('User update not found', 404);
     return;
   }
-  
+
   @Post('login')
   @UsePipes(new ValidationPipe())
   async login(@Body() loginUserDto: LoginUserDto) {
