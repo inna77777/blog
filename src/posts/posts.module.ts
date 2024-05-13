@@ -4,6 +4,8 @@ import { Post, PostSchema } from 'src/schemas/Post.schema';
 import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
 import { User, UserSchema } from 'src/schemas/User.schema';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from 'src/auth/constants';
 
 @Module({
   imports: [

@@ -7,7 +7,12 @@ import { UpdateUserDto } from './dto/UpdateUser.dto';
 import { UserSettings } from 'src/schemas/UserSettings.schema';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/LoginUser.dto';
-import { log } from 'console';
+import * as bcrypt from 'bcrypt';
+import {
+  UploadApiErrorResponse,
+  UploadApiResponse,
+  v2 as cloudinary,
+} from 'cloudinary';
 
 @Injectable()
 export class UsersService {
@@ -16,21 +21,35 @@ export class UsersService {
     @InjectModel(UserSettings.name)
     private userSettingsModel: Model<UserSettings>,
     private jwtService: JwtService,
-  ) {}
+  ) {
+    cloudinary.config({
+      cloud_name: 'dxqgupbf0',
+      api_key: '322262275885774',
+      api_secret: 'BG_pD1BIuvYXOzUIbw-Gzs2YLIk',
+    });
+  }
 
-  async createUser({ settings, ...createUserDto }: CreateUserDto) {
+  async createUser({ settings, password, ...createUserDto }: CreateUserDto) {
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     if (settings) {
       const newSettings = new this.userSettingsModel(settings);
       const savedSettings = await newSettings.save();
       const newUser = new this.userModel({
         ...createUserDto,
+        password: hashedPassword,
         settings: savedSettings._id,
       });
       return newUser.save();
     }
-    const newUser = new this.userModel(createUserDto);
+    const newUser = new this.userModel({
+      ...createUserDto,
+      password: hashedPassword,
+    });
     return newUser.save();
   }
+
   getUsers() {
     return this.userModel.find().populate(['settings', 'posts']);
   }
@@ -50,7 +69,11 @@ export class UsersService {
     const user = await this.userModel.findOne({
       login: loginUserDto.login,
     });
-    if (!user || user.password !== loginUserDto.password) {
+
+    if (
+      !user ||
+      !(await bcrypt.compare(loginUserDto.password, user.password))
+    ) {
       throw new Error('Invalid credentials');
     }
 
@@ -60,5 +83,20 @@ export class UsersService {
     return {
       access_token: token,
     };
+  }
+
+  async uploadImage(
+    filePath: string,
+  ): Promise<UploadApiResponse | UploadApiErrorResponse> {
+    return new Promise((resolve, reject) => {
+      cloudinary.uploader.upload(
+        filePath,
+        { folder: 'blog' },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        },
+      );
+    });
   }
 }

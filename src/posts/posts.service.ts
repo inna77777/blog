@@ -12,7 +12,7 @@ export class PostsService {
     @InjectModel(User.name) private userModel: Model<User>,
   ) {}
 
-  async createPost({ userId, ...createPostDto }: CreatePostDto) {
+  async createPost(createPostDto: CreatePostDto, userId: string) {
     const findUser = await this.userModel.findById(userId);
     if (!findUser) throw new HttpException('User Not Found', 404);
     const newPost = new this.postModel({ ...createPostDto, user: userId });

@@ -24,10 +24,7 @@ import { jwtConstants } from 'src/auth/constants';
         schema: UserSettingsSchema,
       },
     ]),
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1h' },
-    }),
+    
   ],
   providers: [UsersService],
   controllers: [UsersController],
