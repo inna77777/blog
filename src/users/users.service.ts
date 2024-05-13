@@ -86,12 +86,12 @@ export class UsersService {
   }
 
   async uploadImage(
-    filePath: string,
+    file: Express.Multer.File,
   ): Promise<UploadApiResponse | UploadApiErrorResponse> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       cloudinary.uploader.upload(
-        filePath,
-        { folder: 'blog' },
+        "data:" + file.mimetype + ";base64," + file.buffer.toString('base64'),
+        { folder: 'blog', resource_type: 'auto' },
         (error, result) => {
           if (error) return reject(error);
           resolve(result);
