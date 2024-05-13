@@ -3,14 +3,13 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
 import * as path from 'path';
+import dotenv from 'dotenv';
+
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  // app.useGlobalPipes( new ValidationPipe())
-  await app.listen(3000);
-  // const app = await NestFactory.create<NestExpressApplication>(AppModule);
+    const app = await NestFactory.create(AppModule);
+    const port = process.env.PORT || 3000;
+    await app.listen(port);
 
-  // app.useStaticAssets(path.join(__dirname, '../uploads'));
-  // await app.listen(3000);
 }
 bootstrap();
