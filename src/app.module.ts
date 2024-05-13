@@ -5,14 +5,24 @@ import { PostModule } from './posts/posts.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './auth/constants';
 import { MulterModule } from '@nestjs/platform-express';
-import dotenv from 'dotenv';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      process.env.MONGODB_URI ||
-        'mongodb+srv://inna42320:innessa12345@inna.eewddjy.mongodb.net/blog',
-    ),
+    MongooseModule.forRootAsync({
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: '.env',
+        }),
+      ],
+      useFactory: (configService: ConfigService) => {
+        console.log(configService.get('MONGODB_URI'));
+        return {
+          uri: configService.get('MONGODB_URI'),
+        };
+      },
+      inject: [ConfigService],
+    }),
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,

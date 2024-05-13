@@ -117,9 +117,10 @@ export class UsersController {
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     // console.log('Uploaded file:', file);
     try {
+      
       console.log(file);
 
-      const result = await this.usersService.uploadImage(file.path);
+      const result = await this.usersService.uploadImage(file);
 
       return result;
     } catch (err) {
