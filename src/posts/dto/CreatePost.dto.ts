@@ -10,4 +10,5 @@ export class CreatePostDto {
   @IsNotEmpty()
   @MaxLength(500)
   content: string;
+  image: Express.Multer.File;
 }

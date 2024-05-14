@@ -6,10 +6,10 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { User, UserSchema } from 'src/schemas/User.schema';
-import {
-  UserSettings,
-  UserSettingsSchema,
-} from 'src/schemas/UserSettings.schema';
+// import {
+//   UserSettings,
+//   UserSettingsSchema,
+// } from 'src/schemas/UserSettings.schema';
 import { jwtConstants } from 'src/auth/constants';
 
 @Module({
@@ -19,10 +19,10 @@ import { jwtConstants } from 'src/auth/constants';
         name: User.name,
         schema: UserSchema,
       },
-      {
-        name: UserSettings.name,
-        schema: UserSettingsSchema,
-      },
+      // {
+      //   name: UserSettings.name,
+      //   schema: UserSettingsSchema,
+      // },
     ]),
     
   ],

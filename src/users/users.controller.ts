@@ -64,6 +64,7 @@ export class UsersController {
 
   //   return updateUser;
   // }
+
   @UseGuards(AuthGuard)
   @Patch('edit')
   @UsePipes(new ValidationPipe())
@@ -100,28 +101,43 @@ export class UsersController {
     }
   }
 
-  @Post('upload')
-  @UseInterceptors(
-    FileInterceptor(
-      'avatar',
-      // , {
-      //   storage: diskStorage({
-      //     destination: './uploads',
-      //     filename: (req, file, cb) => {
-      //       cb(null, file.originalname);
-      //     },
-      //   }),
-      // }
-    ),
-  )
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    // console.log('Uploaded file:', file);
+  // @UseGuards(AuthGuard)
+  // @Post('upload')
+  // @UseInterceptors(FileInterceptor('avatar'))
+  // async uploadFile(
+  //   @UploadedFile() file: Express.Multer.File,
+  //   // @Body() updateUserDto: UpdateUserDto,
+  //   // @Request() req,
+  // ) {
+  //   try {
+  //     console.log(file);
+  //     const result = await this.usersService.uploadImage(file);
+  //     // const updateUser = await this.usersService.updateUser(
+  //     //   req.user.sub,
+  //     //   updateUserDto,
+  //     // );
+  //     console.log(result.url);
+
+  //     return result;
+  //   } catch (err) {
+  //     console.error('Error uploading image', err);
+  //     throw new Error('Failed to upload image');
+  //   }
+  // }
+
+  @UseGuards(AuthGuard)
+  @Post('upload-avatar')
+  @UseInterceptors(FileInterceptor('avatar'))
+  async uploadAvatar(
+    @UploadedFile() file: Express.Multer.File,
+    @Request() req,
+  ) {
     try {
-      
-      console.log(file);
-
       const result = await this.usersService.uploadImage(file);
-
+      const updateUserDto: UpdateUserDto = {
+        avatar: result.url,
+      };
+      await this.usersService.updateUser(req.user.sub, updateUserDto);
       return result;
     } catch (err) {
       console.error('Error uploading image', err);
@@ -129,8 +145,23 @@ export class UsersController {
     }
   }
 
-  // @Get('/getFile/file')
-  // getFile(@Res() res: Response, @Body() file: FileParams) {
-  //   res.sendFile(path.join(__dirname, '../../uploads/' + file.avatar));
-  // }
+  @UseGuards(AuthGuard)
+  @Post('upload-background')
+  @UseInterceptors(FileInterceptor('background'))
+  async uploadBackground(
+    @UploadedFile() file: Express.Multer.File,
+    @Request() req,
+  ) {
+    try {
+      const result = await this.usersService.uploadImage(file);
+      const updateUserDto: UpdateUserDto = {
+        background: result.url,
+      };
+      await this.usersService.updateUser(req.user.sub, updateUserDto);
+      return result;
+    } catch (err) {
+      console.error('Error uploading background', err);
+      throw new Error('Failed to upload background');
+    }
+  }
 }

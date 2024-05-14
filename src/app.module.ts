@@ -16,7 +16,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         }),
       ],
       useFactory: (configService: ConfigService) => {
-        console.log(configService.get('MONGODB_URI'));
         return {
           uri: configService.get('MONGODB_URI'),
         };
