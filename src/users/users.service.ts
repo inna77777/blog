@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { User } from 'src/schemas/User.schema';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
-import { UserSettings } from 'src/schemas/UserSettings.schema';
+// import { UserSettings } from 'src/schemas/UserSettings.schema';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/LoginUser.dto';
 import * as bcrypt from 'bcrypt';
@@ -18,8 +18,8 @@ import {
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    @InjectModel(UserSettings.name)
-    private userSettingsModel: Model<UserSettings>,
+    // @InjectModel(UserSettings.name)
+    // private userSettingsModel: Model<UserSettings>,
     private jwtService: JwtService,
   ) {
     cloudinary.config({
@@ -29,20 +29,20 @@ export class UsersService {
     });
   }
 
-  async createUser({ settings, password, ...createUserDto }: CreateUserDto) {
+  async createUser({ /*settings,*/ password, ...createUserDto }: CreateUserDto) {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    if (settings) {
-      const newSettings = new this.userSettingsModel(settings);
-      const savedSettings = await newSettings.save();
-      const newUser = new this.userModel({
-        ...createUserDto,
-        password: hashedPassword,
-        settings: savedSettings._id,
-      });
-      return newUser.save();
-    }
+    // if (settings) {
+    //   const newSettings = new this.userSettingsModel(settings);
+    //   const savedSettings = await newSettings.save();
+    //   const newUser = new this.userModel({
+    //     ...createUserDto,
+    //     password: hashedPassword,
+    //     settings: savedSettings._id,
+    //   });
+    //   return newUser.save();
+    // }
     const newUser = new this.userModel({
       ...createUserDto,
       password: hashedPassword,
@@ -58,7 +58,11 @@ export class UsersService {
   }
 
   updateUser(id: string, updateUserDto: UpdateUserDto) {
-    return this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
+    return this.userModel.findByIdAndUpdate(
+      id,
+      { $set: updateUserDto },
+      { new: true },
+    );
   }
 
   deleteUser(id: string) {
@@ -90,7 +94,7 @@ export class UsersService {
   ): Promise<UploadApiResponse | UploadApiErrorResponse> {
     return new Promise(async (resolve, reject) => {
       cloudinary.uploader.upload(
-        "data:" + file.mimetype + ";base64," + file.buffer.toString('base64'),
+        'data:' + file.mimetype + ';base64,' + file.buffer.toString('base64'),
         { folder: 'blog', resource_type: 'auto' },
         (error, result) => {
           if (error) return reject(error);
@@ -99,4 +103,5 @@ export class UsersService {
       );
     });
   }
+  
 }

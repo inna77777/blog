@@ -4,7 +4,12 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   description?: string;
+  
   @IsOptional()
   @IsString()
   avatar?: string;
+
+  @IsOptional()
+  @IsString()
+  background?: string;
 }
