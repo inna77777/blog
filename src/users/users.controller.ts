@@ -42,7 +42,7 @@ export class UsersController {
   }
 
   // /users/:id
-  @Get(':id')
+  @Get('user/:id')
   async getUserById(@Param('id') id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('User not found', 404);
