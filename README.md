@@ -46,6 +46,10 @@ Optional fields: **title, content, image**
 
 **GET /posts/post/:id :** Retrieves a specific post by its ID.
 
+**GET /posts/all/user/:id :** Retrieves all posts of one user.
+
+**GET /posts/all :** Retrieves all posts from the service
+
 **DELETE /posts/delete/post/:id** Delete post. It can do only user who created this post
 
 #### Comments :

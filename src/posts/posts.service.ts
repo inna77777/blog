@@ -92,6 +92,13 @@ export class PostsService {
     });
   }
 
+  getAllPostsOfUser(id: string) {
+    return this.postModel.find({ userId: id });
+  }
+  getAllPosts() {
+    return this.postModel.find();
+  }
+
   getPostById(id: string) {
     return this.postModel.findById(id);
   }

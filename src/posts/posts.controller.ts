@@ -65,6 +65,18 @@ export class PostsController {
     return findUser;
   }
 
+  @UseGuards(AuthGuard)
+  @Get('all/user/:id')
+  async getAllPostsOfUser(@Param('id') id: string) {
+   return this.postsService.getAllPostsOfUser(id)
+  }
+  
+  @UseGuards(AuthGuard)
+  @Get('all')
+  async getAllPosts() {
+   return this.postsService.getAllPosts()
+  }
+
 
   //! new route
   @UseGuards(AuthGuard)
