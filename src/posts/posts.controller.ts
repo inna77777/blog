@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   Param,
@@ -56,11 +57,19 @@ export class PostsController {
 
   @UseGuards(AuthGuard)
   @Get('post/:id')
-  async getUserById(@Param('id') id: string) {
+  async getPostById(@Param('id') id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Post not found', 404);
     const findUser = await this.postsService.getPostById(id);
     if (!findUser) throw new HttpException('Post not found', 404);
     return findUser;
+  }
+
+
+  //! new route
+  @UseGuards(AuthGuard)
+  @Delete('delete/post/:id')
+  async deletePost(@Param('id') id: string, @Request() req) {
+    return this.postsService.deletePost(id, req.user.sub);
   }
 }

@@ -36,12 +36,14 @@ export class UsersController {
     return this.usersService.createUser(createUserDto);
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   getUsers() {
     return this.usersService.getUsers();
   }
 
   // /users/:id
+  @UseGuards(AuthGuard)
   @Get('user/:id')
   async getUserById(@Param('id') id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
@@ -100,30 +102,6 @@ export class UsersController {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
   }
-
-  // @UseGuards(AuthGuard)
-  // @Post('upload')
-  // @UseInterceptors(FileInterceptor('avatar'))
-  // async uploadFile(
-  //   @UploadedFile() file: Express.Multer.File,
-  //   // @Body() updateUserDto: UpdateUserDto,
-  //   // @Request() req,
-  // ) {
-  //   try {
-  //     console.log(file);
-  //     const result = await this.usersService.uploadImage(file);
-  //     // const updateUser = await this.usersService.updateUser(
-  //     //   req.user.sub,
-  //     //   updateUserDto,
-  //     // );
-  //     console.log(result.url);
-
-  //     return result;
-  //   } catch (err) {
-  //     console.error('Error uploading image', err);
-  //     throw new Error('Failed to upload image');
-  //   }
-  // }
 
   @UseGuards(AuthGuard)
   @Post('upload-avatar')
