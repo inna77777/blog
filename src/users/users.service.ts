@@ -29,7 +29,10 @@ export class UsersService {
     });
   }
 
-  async createUser({ /*settings,*/ password, ...createUserDto }: CreateUserDto) {
+  async createUser({
+    /*settings,*/ password,
+    ...createUserDto
+  }: CreateUserDto) {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -51,10 +54,11 @@ export class UsersService {
   }
 
   getUsers() {
-    return this.userModel.find().populate(['settings', 'posts']);
+    // return this.userModel.find().populate(['posts'] );
+    return this.userModel.find().select('-login -password').populate(['posts']);
   }
   getUserById(id: string) {
-    return this.userModel.findById(id).populate('settings');
+    return this.userModel.findById(id, '-login -password');
   }
 
   updateUser(id: string, updateUserDto: UpdateUserDto) {
@@ -103,5 +107,4 @@ export class UsersService {
       );
     });
   }
-  
 }

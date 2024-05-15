@@ -6,6 +6,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './auth/constants';
 import { MulterModule } from '@nestjs/platform-express';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CommentModule } from './comments/comments.module';
+import { LikeModule } from './likes/likes.module';
+import { FollowModule } from './follow/follow.module';
 
 @Module({
   imports: [
@@ -30,6 +33,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     MulterModule.register({ dest: './uploads' }),
     UserModule,
     PostModule,
+    CommentModule,
+    LikeModule,
+    FollowModule
   ],
   controllers: [],
   providers: [],

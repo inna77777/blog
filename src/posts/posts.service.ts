@@ -10,12 +10,14 @@ import {
   v2 as cloudinary,
 } from 'cloudinary';
 import { UpdatePostDto } from './dto/UpdatePostDto';
+import { Comment } from 'src/schemas/Comment.schema';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectModel(Post.name) private postModel: Model<Post>,
     @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Comment.name) private commentModel: Model<Comment>,
   ) {
     cloudinary.config({
       cloud_name: 'dxqgupbf0',
@@ -34,7 +36,7 @@ export class PostsService {
     const uploadResult = await this.uploadImage(image);
     const newPost = new this.postModel({
       ...createPostDto,
-      user: userId,
+      userId: userId,
       image: uploadResult.url,
     });
     const savedPost = await newPost.save();
@@ -92,5 +94,25 @@ export class PostsService {
 
   getPostById(id: string) {
     return this.postModel.findById(id);
+  }
+
+  async deletePost(id: string, userId: string) {
+    const post = await this.postModel.findById(id);
+    if (!post) throw new HttpException('Post Not Found', 404);
+    const user = await this.userModel.findById(post.userId);
+    if (!user) throw new HttpException('User Not Found', 404);
+
+    if (post.userId.toString() !== userId.toString())
+      throw new Error('You are not alloweded to delete post');
+
+    await this.commentModel.deleteMany({ postId: id });
+
+    const deletedPost = this.postModel.findByIdAndDelete(id);
+    await user.updateOne({
+      $pull: {
+        posts: id,
+      },
+    });
+    return deletedPost;
   }
 }
