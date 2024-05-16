@@ -47,7 +47,7 @@ export class UsersService {
     });
     const msg = {
       to: createUserDto.login,
-      from: 'inna42320@gmail.com',
+      from: process.env.EMAIL,
       subject: 'Welcome!!!',
       text: 'Welcome to camping blog!!!!',
       html: `<div><p>We're happy to see you on our site! Whether you're a seasoned camper or just starting out, our blog is here to provide you with tips, guides, and inspiration for your next adventure.</p> <p>With love, your camping team <3 </p></div> `,
