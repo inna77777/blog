@@ -13,11 +13,6 @@ import { FollowModule } from './follow/follow.module';
 @Module({
   imports: [
     MongooseModule.forRootAsync({
-      imports: [
-        ConfigModule.forRoot({
-          envFilePath: '.env',
-        }),
-      ],
       useFactory: (configService: ConfigService) => {
         return {
           uri: configService.get('MONGODB_URI'),
@@ -35,7 +30,11 @@ import { FollowModule } from './follow/follow.module';
     PostModule,
     CommentModule,
     LikeModule,
-    FollowModule
+    FollowModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
   ],
   controllers: [],
   providers: [],
