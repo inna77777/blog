@@ -39,7 +39,7 @@ export class UsersService {
   }: CreateUserDto) {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    this.mailService.setApiKey(process.env.SENDGRID_API_KEY);
+    this.mailService.setApiKey(process.env.SENDGRID_API);
 
     const newUser = new this.userModel({
       ...createUserDto,
