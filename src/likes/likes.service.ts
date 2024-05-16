@@ -42,4 +42,8 @@ export class LikesService {
     });
     return await this.likeModel.findByIdAndDelete(like._id);
   }
+
+  async getAllLikes(postId: string) {
+    return await this.likeModel.countDocuments({ postId: postId });
+  }
 }

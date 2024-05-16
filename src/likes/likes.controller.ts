@@ -2,6 +2,7 @@ import {
   ConflictException,
   Controller,
   Delete,
+  Get,
   HttpException,
   Param,
   Post,
@@ -32,5 +33,11 @@ export class LikesController {
   @Delete('delete/post/:postId')
   deleteLike(@Param('postId') postId: string, @Request() req) {
     return this.likeService.deleteLike(postId, req.user.sub);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('all/post/:postId')
+  getAllLikes(@Param('postId') postId: string) {
+    return this.likeService.getAllLikes(postId);
   }
 }
