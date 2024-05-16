@@ -8,6 +8,7 @@ import { UpdateUserDto } from './dto/UpdateUser.dto';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/LoginUser.dto';
 import * as bcrypt from 'bcrypt';
+import { MailService } from '@sendgrid/mail';
 import {
   UploadApiErrorResponse,
   UploadApiResponse,
@@ -21,7 +22,10 @@ export class UsersService {
     // @InjectModel(UserSettings.name)
     // private userSettingsModel: Model<UserSettings>,
     private jwtService: JwtService,
+    private mailService: MailService,
   ) {
+    // SendGrid.setApiKey(process.env.SENDGRID_API_KEY);
+
     cloudinary.config({
       cloud_name: 'dxqgupbf0',
       api_key: '322262275885774',
@@ -35,21 +39,25 @@ export class UsersService {
   }: CreateUserDto) {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
+    this.mailService.setApiKey(
+      process.env.SENDGRID_API_KEY ||
+        "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",
+    );
 
-    // if (settings) {
-    //   const newSettings = new this.userSettingsModel(settings);
-    //   const savedSettings = await newSettings.save();
-    //   const newUser = new this.userModel({
-    //     ...createUserDto,
-    //     password: hashedPassword,
-    //     settings: savedSettings._id,
-    //   });
-    //   return newUser.save();
-    // }
     const newUser = new this.userModel({
       ...createUserDto,
       password: hashedPassword,
     });
+    const msg = {
+      to: createUserDto.login,
+      from: 'inna42320@gmail.com',
+      subject: 'Welcome!!!',
+      text: 'Welcome to camping blog!!!!',
+      html: `<div><p>We're happy to see you on our site! Whether you're a seasoned camper or just starting out, our blog is here to provide you with tips, guides, and inspiration for your next adventure.</p> <p>With love, your camping team <3 </p></div> `,
+    };
+    await this.mailService.send(msg);
+    console.log('Email sent!');
+
     return newUser.save();
   }
 

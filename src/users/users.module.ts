@@ -6,6 +6,8 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { User, UserSchema } from 'src/schemas/User.schema';
+import { MailService } from '@sendgrid/mail';
+
 // import {
 //   UserSettings,
 //   UserSettingsSchema,
@@ -24,9 +26,8 @@ import { jwtConstants } from 'src/auth/constants';
       //   schema: UserSettingsSchema,
       // },
     ]),
-    
   ],
-  providers: [UsersService],
+  providers: [UsersService, MailService],
   controllers: [UsersController],
 })
 export class UserModule {}

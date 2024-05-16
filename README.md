@@ -71,6 +71,9 @@ Optional fields: **content**
 
 **DELETE /likes/delete/post/:postId:** Enables authenticated users to remove their like from a post, updating the post's likes count and removing the like from the database.
 
+**GET /likes/all/post/:postId:** Get count of likes of one post
+
+
 #### Following/followers :
 
 **POST /follow/user/:userId:** Allows authenticated users to follow another user identified by userId, ensuring that they are not already following the user.
