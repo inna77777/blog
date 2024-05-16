@@ -14,6 +14,7 @@ import {
   UploadApiResponse,
   v2 as cloudinary,
 } from 'cloudinary';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
@@ -23,8 +24,9 @@ export class UsersService {
     // private userSettingsModel: Model<UserSettings>,
     private jwtService: JwtService,
     private mailService: MailService,
+    private configService: ConfigService,
   ) {
-    // SendGrid.setApiKey(process.env.SENDGRID_API_KEY);
+    this.mailService.setApiKey(this.configService.get<string>('SENDGRID_API'));
 
     cloudinary.config({
       cloud_name: 'dxqgupbf0',
@@ -39,7 +41,6 @@ export class UsersService {
   }: CreateUserDto) {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-    this.mailService.setApiKey(process.env.SENDGRID_API);
 
     const newUser = new this.userModel({
       ...createUserDto,
@@ -47,7 +48,7 @@ export class UsersService {
     });
     const msg = {
       to: createUserDto.login,
-      from: process.env.EMAIL,
+      from: this.configService.get<string>('EMAIL'),
       subject: 'Welcome!!!',
       text: 'Welcome to camping blog!!!!',
       html: `<div><p>We're happy to see you on our site! Whether you're a seasoned camper or just starting out, our blog is here to provide you with tips, guides, and inspiration for your next adventure.</p> <p>With love, your camping team <3 </p></div> `,
