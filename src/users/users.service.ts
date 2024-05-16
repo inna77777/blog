@@ -40,8 +40,7 @@ export class UsersService {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
     this.mailService.setApiKey(
-      process.env.SENDGRID_API_KEY ||
-        "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",
+      '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',
     );
 
     const newUser = new this.userModel({
