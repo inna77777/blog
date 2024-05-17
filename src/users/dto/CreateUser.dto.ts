@@ -1,5 +1,12 @@
 import { Type } from 'class-transformer';
-import {IsEmail, IsNotEmpty, IsOptional, IsString, Matches, ValidateNested } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+  ValidateNested,
+} from 'class-validator';
 
 // export class CreateUserSettingsDto {
 //   @IsOptional()
@@ -20,7 +27,6 @@ export class CreateUserDto {
   login: string;
 
   @IsNotEmpty()
-  @Matches(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,}$/)
   password: string;
 
   @IsNotEmpty()
@@ -30,5 +36,4 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   description?: string;
-
 }

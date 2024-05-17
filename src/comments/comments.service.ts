@@ -37,10 +37,12 @@ export class CommentsService {
   }
 
   async getComments(postId: string) {
-    const findPost = await this.postModel.findById(postId);
-    if (!findPost) throw new HttpException('Post Not Found', 404);
-    const comments = await this.commentModel.find({ postId: findPost._id });
-    return comments;
+   const findPost = await this.postModel.findById(postId);
+   if (!findPost) throw new HttpException('Post Not Found', 404);
+   const comments = await this.commentModel
+     .find({ postId: findPost._id })
+     .populate('userId', 'nickname');
+   return comments;
   }
 
   async deleteComments(commentId: string, userId: string) {
