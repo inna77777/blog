@@ -53,20 +53,6 @@ export class UsersController {
     return findUser;
   }
 
-  // @Patch(':id')
-  // @UsePipes(new ValidationPipe())
-  // async updateUser(
-  //   @Param('id') id: string,
-  //   @Body() updateUserDto: UpdateUserDto,
-  // ) {
-  //   const isValid = mongoose.Types.ObjectId.isValid(id);
-  //   if (!isValid) throw new HttpException('Invalid ID', 400);
-  //   const updateUser = await this.usersService.updateUser(id, updateUserDto);
-  //   if (!updateUser) throw new HttpException('User update not found', 404);
-
-  //   return updateUser;
-  // }
-
   @UseGuards(AuthGuard)
   @Patch('edit')
   @UsePipes(new ValidationPipe())
