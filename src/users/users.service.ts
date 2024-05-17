@@ -15,13 +15,19 @@ import {
   v2 as cloudinary,
 } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
+import { Post } from 'src/schemas/Post.schema';
+import { Comment } from 'src/schemas/Comment.schema';
+import { Like } from 'src/schemas/Like.Schema';
+import { Follow } from 'src/schemas/Follow.schema';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    // @InjectModel(UserSettings.name)
-    // private userSettingsModel: Model<UserSettings>,
+    @InjectModel(Post.name) private postModel: Model<Post>,
+    @InjectModel(Comment.name) private commentModel: Model<Comment>,
+    @InjectModel(Like.name) private likeModel: Model<Like>,
+    @InjectModel(Follow.name) private followModel: Model<Follow>,
     private jwtService: JwtService,
     private mailService: MailService,
     private configService: ConfigService,
@@ -75,8 +81,19 @@ export class UsersService {
     );
   }
 
-  deleteUser(id: string) {
-    return this.userModel.findByIdAndDelete(id);
+  async deleteUser(id: string) {
+    const user = await this.userModel.findByIdAndDelete(id);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+    await this.postModel.deleteMany({ userId: user._id });
+    await this.commentModel.deleteMany({ postId: { $in: user.posts } });
+    await this.likeModel.deleteMany({ postId: { $in: user.posts } });
+    await this.followModel.deleteMany({
+      $or: [{ followerId: user._id }, { followedById: user._id }],
+    });
+    return user;
   }
 
   async login(loginUserDto: LoginUserDto) {

@@ -13,6 +13,10 @@ import { MailService } from '@sendgrid/mail';
 //   UserSettingsSchema,
 // } from 'src/schemas/UserSettings.schema';
 import { jwtConstants } from 'src/auth/constants';
+import { Post, PostSchema } from 'src/schemas/Post.schema';
+import { Comment, CommentSchema } from 'src/schemas/Comment.schema';
+import { Like, LikeSchema } from 'src/schemas/Like.Schema';
+import { Follow, FollowSchema } from 'src/schemas/Follow.schema';
 
 @Module({
   imports: [
@@ -21,10 +25,16 @@ import { jwtConstants } from 'src/auth/constants';
         name: User.name,
         schema: UserSchema,
       },
-      // {
-      //   name: UserSettings.name,
-      //   schema: UserSettingsSchema,
-      // },
+      { name: Post.name, schema: PostSchema },
+      {
+        name: Comment.name,
+        schema: CommentSchema,
+      },
+      {
+        name: Like.name,
+        schema: LikeSchema,
+      },
+      { name: Follow.name, schema: FollowSchema },
     ]),
   ],
   providers: [UsersService, MailService],

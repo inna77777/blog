@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import {IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
+import {IsEmail, IsNotEmpty, IsOptional, IsString, Matches, ValidateNested } from 'class-validator';
 
 // export class CreateUserSettingsDto {
 //   @IsOptional()
@@ -16,11 +16,13 @@ import {IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator
 
 export class CreateUserDto {
   @IsNotEmpty()
-  @IsString()
+  @IsEmail()
   login: string;
+
   @IsNotEmpty()
-  @IsString()
+  @Matches(/^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,}$/)
   password: string;
+
   @IsNotEmpty()
   @IsString()
   nickname: string;
@@ -29,8 +31,4 @@ export class CreateUserDto {
   @IsOptional()
   description?: string;
 
-  // @ValidateNested()
-  // @IsOptional()
-  // @Type(()=> CreateUserSettingsDto)
-  // settings?: CreateUserSettingsDto;
 }
