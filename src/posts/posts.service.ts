@@ -96,7 +96,7 @@ export class PostsService {
     return this.postModel.find({ userId: id });
   }
   getAllPosts() {
-    return this.postModel.find();
+    return this.postModel.find().populate('userId', 'nickname avatar');
   }
 
   getPostById(id: string) {
