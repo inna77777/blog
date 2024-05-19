@@ -72,6 +72,9 @@ export class UsersService {
   getUserById(id: string) {
     return this.userModel.findById(id, '-login -password');
   }
+  getUserCurrent(id: string) {
+    return this.userModel.findById(id, '-login -password');
+  }
 
   updateUser(id: string, updateUserDto: UpdateUserDto) {
     return this.userModel.findByIdAndUpdate(

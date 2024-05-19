@@ -54,6 +54,16 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('current-user')
+  async getUserCurrent(@Request() req) {
+    const isValid = mongoose.Types.ObjectId.isValid(req.user.sub);
+    if (!isValid) throw new HttpException('User not found', 404);
+    const findUser = await this.usersService.getUserCurrent(req.user.sub);
+    if (!findUser) throw new HttpException('User not found', 404);
+    return findUser;
+  }
+
+  @UseGuards(AuthGuard)
   @Patch('edit')
   @UsePipes(new ValidationPipe())
   async updateUser(@Body() updateUserDto: UpdateUserDto, @Request() req) {
