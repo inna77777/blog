@@ -22,10 +22,9 @@ Required fields: **login, password**
 
 **PATCH /users/edit:** Updates the profile information of the authenticated user.
 
-Optional fields: **description**
+Optional fields: **login, nickname, password, description**
 
-After it'll be possible to change another filds as login, pass, nick.
-upload-avatar && upload-background also update user info but i did it as another route
+
 
 **POST /users/upload-avatar:** Allows authenticated users to upload a new avatar image.
 Optional fields: **avatar**
@@ -100,6 +99,7 @@ Optional fields: **content**
 
 **password:**
 *Type*: string
+*MinLength*: 5
 *Required*: true
 *Description*: Stores the user's password.
 

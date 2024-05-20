@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { User } from 'src/schemas/User.schema';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
-// import { UserSettings } from 'src/schemas/UserSettings.schema';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/LoginUser.dto';
 import * as bcrypt from 'bcrypt';
@@ -45,7 +44,26 @@ export class UsersService {
     /*settings,*/ password,
     ...createUserDto
   }: CreateUserDto) {
-    // Hash the password
+    const existingUserWithEmail = await this.userModel.findOne({
+      login: createUserDto.login,
+    });
+
+    if (!/^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/.test(password)) {
+      return { message: 'Password must contain both letters and numbers' };
+    }
+    if (existingUserWithEmail) {
+      return { message: 'Email already exists' };
+    }
+
+    if (createUserDto.nickname) {
+      const existingUserWithNickname = await this.userModel.findOne({
+        nickname: createUserDto.nickname,
+      });
+      if (existingUserWithNickname) {
+        return { message: 'Nickname already exists' };
+      }
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new this.userModel({
@@ -76,12 +94,46 @@ export class UsersService {
     return this.userModel.findById(id, '-login -password');
   }
 
-  updateUser(id: string, updateUserDto: UpdateUserDto) {
-    return this.userModel.findByIdAndUpdate(
-      id,
-      { $set: updateUserDto },
-      { new: true },
-    );
+  async updateUser(id: string, updateUserDto: UpdateUserDto) {
+    if (updateUserDto.login) {
+      const existingUserWithEmail = await this.userModel.findOne({
+        login: updateUserDto.login,
+      });
+
+      if (existingUserWithEmail && existingUserWithEmail.id !== id) {
+        return { message: 'Email already exists' };
+      }
+    }
+
+    if (updateUserDto.nickname) {
+      const existingUserWithNickname = await this.userModel.findOne({
+        nickname: updateUserDto.nickname,
+      });
+      if (existingUserWithNickname && existingUserWithNickname.id !== id) {
+        return { message: 'Nickname already exists' };
+      }
+    }
+
+    if (updateUserDto.password) {
+      if (
+        !/^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/.test(updateUserDto.password)
+      ) {
+        return { message: 'Password must contain both letters and numbers' };
+      }
+      const hashedPassword = await bcrypt.hash(updateUserDto.password, 10);
+      updateUserDto.password = hashedPassword;
+    }
+
+    try {
+      const updatedUser = await this.userModel.findByIdAndUpdate(
+        id,
+        { $set: updateUserDto },
+        { new: true },
+      );
+      return updatedUser;
+    } catch (error) {
+      return { message: 'Error updating user' };
+    }
   }
 
   async deleteUser(id: string) {
