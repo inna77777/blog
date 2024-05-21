@@ -160,7 +160,7 @@ export class UsersService {
       !user ||
       !(await bcrypt.compare(loginUserDto.password, user.password))
     ) {
-      throw new Error('Invalid credentials');
+      return { message: 'Email or password is wrong' };
     }
 
     const payload = { username: user.login, sub: user._id };
