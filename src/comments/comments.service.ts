@@ -37,12 +37,12 @@ export class CommentsService {
   }
 
   async getComments(postId: string) {
-   const findPost = await this.postModel.findById(postId);
-   if (!findPost) throw new HttpException('Post Not Found', 404);
-   const comments = await this.commentModel
-     .find({ postId: findPost._id })
-     .populate('userId', 'nickname');
-   return comments;
+    const findPost = await this.postModel.findById(postId);
+    if (!findPost) throw new HttpException('Post Not Found', 404);
+    const comments = await this.commentModel
+      .find({ postId: findPost._id })
+      .populate('userId', 'nickname');
+    return comments;
   }
 
   async deleteComments(commentId: string, userId: string) {
@@ -52,10 +52,10 @@ export class CommentsService {
     if (!post) throw new HttpException('Post Not Found', 404);
 
     if (
-      comment.userId.toString() !== userId.toString() ||
+      comment.userId.toString() !== userId &&
       post.userId.toString() !== userId
     )
-      throw new Error('You are not alloweded to delete comment');
+      return { message: 'You are not allowed to delete that comment' };
 
     const deletedComment = this.commentModel.findByIdAndDelete(commentId);
     await post.updateOne({
@@ -76,11 +76,14 @@ export class CommentsService {
     const post = await this.postModel.findById(comment.postId);
     if (!post) throw new HttpException('Post Not Found', 404);
 
+    console.log(userId);
+    console.log(comment.userId.toString());
+
     if (
-      comment.userId.toString() !== userId.toString() ||
+      comment.userId.toString() !== userId &&
       post.userId.toString() !== userId
     )
-      throw new Error('You are not alloweded to edit that comment');
+      return { message: 'You are not allowed to edit that comment' };
 
     return this.commentModel.findByIdAndUpdate(commentId, updateCommentDto, {
       new: true,
