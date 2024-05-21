@@ -1,6 +1,9 @@
 ### API ENDPOINTS:
 
-API HEROKU : **https://blog-camping-cbb2c4cfea86.herokuapp.com/**
+##### API RENDER : **https://blog-iuef.onrender.com**
+
+
+*API HEROKU : **https://blog-camping-cbb2c4cfea86.herokuapp.com/*** 
 
 Required fields: **must be provided**
 Optional fields: **can be provided but not necessary**
@@ -18,7 +21,7 @@ Required fields: **login, password**
 **GET /users:** Retrieves a list of all users.
 
 **GET /users/user/:id :** Retrieves a specific user by their ID.
-**GET /users/current-user :** Retrieves a logined in user by its ID.
+**GET /users/current-user :**  Retrieves a logined in user by its ID.
 
 **PATCH /users/edit:** Updates the profile information of the authenticated user.
 
