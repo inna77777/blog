@@ -1,6 +1,6 @@
 ### API ENDPOINTS:
 
-API HEROKU : **https://blog-camping-cbb2c4cfea86.herokuapp.com/**
+API HEROKU : **https://blog-camping-cbb2c4cfea86.herokuapp.com/**  
 
 Required fields: **must be provided**
 Optional fields: **can be provided but not necessary**
