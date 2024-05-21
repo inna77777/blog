@@ -55,7 +55,7 @@ export class CommentsService {
       comment.userId.toString() !== userId &&
       post.userId.toString() !== userId
     )
-      return { message: 'You are not allowed to delete that comment' };
+      return { message: 'You are not allowed to delete this comment' };
 
     const deletedComment = this.commentModel.findByIdAndDelete(commentId);
     await post.updateOne({
@@ -83,7 +83,7 @@ export class CommentsService {
       comment.userId.toString() !== userId &&
       post.userId.toString() !== userId
     )
-      return { message: 'You are not allowed to edit that comment' };
+      return { message: 'You are not allowed to edit this comment' };
 
     return this.commentModel.findByIdAndUpdate(commentId, updateCommentDto, {
       new: true,
