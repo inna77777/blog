@@ -7,6 +7,6 @@ export class Follow {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   followerId: string;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  followedById: string;
+  followedUserId: string;
 }
 export const FollowSchema = SchemaFactory.createForClass(Follow);

@@ -14,8 +14,11 @@ export class FollowService {
   async followPerson(currentUserId: string, userId: string) {
     const existingFollow = await this.followModel.findOne({
       followerId: currentUserId,
-      followedById: userId,
+      followedUserId: userId,
     });
+    
+    console.log(existingFollow);
+    
 
     if (existingFollow) {
       throw new HttpException('You already follow this user', 400);
@@ -23,7 +26,7 @@ export class FollowService {
 
     const follow = await this.followModel.create({
       followerId: currentUserId,
-      followedById: userId,
+      followedUserId: userId,
     });
 
     // await this.userModel.updateOne(
@@ -40,7 +43,7 @@ export class FollowService {
   async deleteFollowing(currentUserId: string, userId: string) {
     const existingFollow = await this.followModel.findOne({
       followerId: currentUserId,
-      followedById: userId,
+      followedUserId: userId,
     });
     if (!existingFollow) {
       throw new HttpException('You dont follow this user', 400);
@@ -49,7 +52,7 @@ export class FollowService {
   }
 
   async getFollowers(userId: string) {
-    const followers = await this.followModel.find({ followedById: userId });
+    const followers = await this.followModel.find({ followedUserId: userId });
     const userFollowers = followers.map((follower) => follower.followerId);
     return await this.userModel.find(
       { _id: { $in: userFollowers } },
@@ -58,7 +61,7 @@ export class FollowService {
   }
   async getFollowing(userId: string) {
     const following = await this.followModel.find({ followerId: userId });
-    const userFollowing = following.map((follower) => follower.followedById);
+    const userFollowing = following.map((follower) => follower.followedUserId);
     return await this.userModel.find(
       { _id: { $in: userFollowing } },
       '-login -password',
