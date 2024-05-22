@@ -57,26 +57,23 @@ export class PostsController {
 
   @UseGuards(AuthGuard)
   @Get('post/:id')
-  async getPostById(@Param('id') id: string) {
+  async getPostById(@Param('id') id: string, @Request() req) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('Post not found', 404);
-    const findUser = await this.postsService.getPostById(id);
-    if (!findUser) throw new HttpException('Post not found', 404);
-    return findUser;
+    return await this.postsService.getPostById(id, req.user.sub);
   }
 
   @UseGuards(AuthGuard)
   @Get('all/user/:id')
   async getAllPostsOfUser(@Param('id') id: string) {
-   return this.postsService.getAllPostsOfUser(id)
+    return this.postsService.getAllPostsOfUser(id);
   }
-  
+
   @UseGuards(AuthGuard)
   @Get('all')
   async getAllPosts() {
-   return this.postsService.getAllPosts()
+    return this.postsService.getAllPosts();
   }
-
 
   //! new route
   @UseGuards(AuthGuard)

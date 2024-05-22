@@ -5,11 +5,13 @@ import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
 import { User, UserSchema } from 'src/schemas/User.schema';
 import { Comment, CommentSchema } from 'src/schemas/Comment.schema';
+import { Like, LikeSchema } from 'src/schemas/Like.Schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Post.name, schema: PostSchema },
+      { name: Like.name, schema: LikeSchema },
       { name: Comment.name, schema: CommentSchema },
       {
         name: User.name,

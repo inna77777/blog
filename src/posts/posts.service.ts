@@ -11,12 +11,14 @@ import {
 } from 'cloudinary';
 import { UpdatePostDto } from './dto/UpdatePostDto';
 import { Comment } from 'src/schemas/Comment.schema';
+import { Like } from 'src/schemas/Like.Schema';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectModel(Post.name) private postModel: Model<Post>,
     @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Like.name) private likeModel: Model<Like>,
     @InjectModel(Comment.name) private commentModel: Model<Comment>,
   ) {
     cloudinary.config({
@@ -95,12 +97,27 @@ export class PostsService {
   getAllPostsOfUser(id: string) {
     return this.postModel.find({ userId: id });
   }
+
   getAllPosts() {
     return this.postModel.find().populate('userId', 'nickname avatar');
   }
 
-  getPostById(id: string) {
-    return this.postModel.findById(id);
+  async getPostById(postId: string, userId: string) {
+    let isLiked: boolean;
+    const post: any = await this.postModel.findById(postId);
+    if (post) {
+      const like = await this.likeModel.findOne({
+        userId: userId,
+        postId: postId,
+      });
+
+      if (like) {
+        isLiked = true;
+      } else {
+        isLiked = false;
+      }
+    }
+    return { ...post._doc, isLiked: isLiked };
   }
 
   async deletePost(id: string, userId: string) {

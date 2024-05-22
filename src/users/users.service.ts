@@ -95,7 +95,6 @@ export class UsersService {
         followedUserId: id,
         followerId: currentUserId,
       });
-      console.log('aaa', follow);
       if (follow) {
         isFollowing = true;
       } else {
