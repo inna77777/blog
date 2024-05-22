@@ -23,7 +23,7 @@ import { FollowModule } from './follow/follow.module';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '24h' },
     }),
     MulterModule.register({ dest: './uploads' }),
     UserModule,
