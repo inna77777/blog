@@ -87,8 +87,20 @@ export class UsersService {
     // return this.userModel.find().populate(['posts'] );
     return this.userModel.find().select('-login -password').populate(['posts']);
   }
-  getUserById(id: string) {
-    return this.userModel.findById(id, '-login -password');
+  getUserById(id: string, currentUserId: string) {
+    const user: any = this.userModel.findById(id, '-login -password');
+    if (user) {
+      const follow = this.followModel.findOne({
+        followedById: currentUserId,
+        followerId: id,
+      });
+      if (follow) {
+        user.followed = true;
+      } else {
+        user.followed = false;
+      }
+    }
+    return user;
   }
   getUserCurrent(id: string) {
     return this.userModel.findById(id, '-login -password');
