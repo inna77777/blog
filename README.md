@@ -87,6 +87,15 @@ Optional fields: **content**
 
 **GET /follow/user/following:** Retrieves the list of users whom the authenticated user is following, based on their user ID.
 
+**GET /followers/user/:userId :**  retrieves a list of followers for the specified user ID.
+
+**GET /following/user/:userId :** also  fetches a list of users that the specified user ID is following.
+
+
+
+
+
+
 ### MongoDB Schemas description:
 
 ##### User

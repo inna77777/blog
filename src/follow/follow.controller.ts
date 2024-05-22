@@ -24,6 +24,18 @@ export class FollowController {
   deleteFollowing(@Request() req, @Param('userId') userId: string) {
     return this.followService.deleteFollowing(req.user.sub, userId);
   }
+
+  @UseGuards(AuthGuard)
+  @Get('followers/user/:userId')
+  async getFollowersByUserId(@Param('userId') userId: string) {
+    return this.followService.getFollowers(userId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('following/user/:userId')
+  async getFollowingByUserId(@Param('userId') userId: string) {
+    return this.followService.getFollowing(userId);
+  }
   @UseGuards(AuthGuard)
   @Get('user/followers')
   getFollowers(@Request() req) {
