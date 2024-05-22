@@ -92,8 +92,8 @@ export class UsersService {
     let isFollowing: boolean;
     if (user) {
       const follow = await this.followModel.findOne({
-        followedById: currentUserId,
-        followerId: id,
+        followedUserId: id,
+        followerId: currentUserId,
       });
       console.log('aaa', follow);
       if (follow) {
