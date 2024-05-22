@@ -45,10 +45,10 @@ export class UsersController {
   // /users/:id
   @UseGuards(AuthGuard)
   @Get('user/:id')
-  async getUserById(@Param('id') id: string) {
+  async getUserById(@Request() req, @Param('id') id: string) {
     const isValid = mongoose.Types.ObjectId.isValid(id);
     if (!isValid) throw new HttpException('User not found', 404);
-    const findUser = await this.usersService.getUserById(id);
+    const findUser = await this.usersService.getUserById(id, req.user.sub);
     if (!findUser) throw new HttpException('User not found', 404);
     return findUser;
   }
