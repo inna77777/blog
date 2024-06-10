@@ -159,7 +159,9 @@ export class UsersService {
     }
     await this.postModel.deleteMany({ userId: user._id });
     await this.commentModel.deleteMany({ postId: { $in: user.posts } });
+    await this.commentModel.deleteMany({ userId: user._id });
     await this.likeModel.deleteMany({ postId: { $in: user.posts } });
+    await this.likeModel.deleteMany({ userId: user._id });
     await this.followModel.deleteMany({
       $or: [{ followerId: user._id }, { followedById: user._id }],
     });
