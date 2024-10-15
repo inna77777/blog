@@ -1,239 +1,41 @@
-### API ENDPOINTS:
+This project is a **feature-rich blog backend** developed using **NestJS** and **MongoDB**, providing a comprehensive platform for users to create, manage, and interact with blog content. Here's a detailed breakdown of its functionality:
+
+### 1. **User Management**:
+   - **Registration and Authentication**: Users can sign up by providing essential details like login, password, and nickname, and can log in using their credentials to receive an authentication token for secure access.
+   - **Profile Management**: Authenticated users can update their profiles with optional fields such as avatar, background image, and description, enhancing their personalized blog presence.
+   - **Deletion**: Users have the option to delete their accounts, removing all their associated data from the system.
+
+### 2. **Post Creation and Management**:
+   - **Creating Posts**: Users can create blog posts with a title, content, and an associated image. The post is linked to the user's profile, creating a public record of their contributions.
+   - **Post Editing and Deletion**: Authenticated users can update their posts or delete them, maintaining control over their published content.
+   - **Post Retrieval**: Posts can be retrieved by their unique ID, by the user who authored them, or users can fetch all posts on the platform.
+
+### 3. **Comments**:
+   - **Commenting on Posts**: Users can add comments to blog posts, providing a means for interaction and feedback between users.
+   - **Comment Management**: Users have the ability to edit or delete their own comments, or in certain cases, post owners can delete comments on their posts.
+   - **Retrieving Comments**: Comments associated with specific posts can be retrieved to display all feedback related to a particular blog post.
+
+### 4. **Likes System**:
+   - **Liking Posts**: Users can like posts, and the system ensures that they can't like the same post multiple times.
+   - **Unlike**: Users can also remove their likes if they change their mind.
+   - **Like Count**: The total number of likes a post receives can be retrieved, providing a metric of popularity or engagement.
+
+### 5. **Follow System**:
+   - **Following and Unfollowing Users**: Authenticated users can follow other users, creating a network of bloggers. This encourages engagement by allowing users to keep up with content from their favorite writers.
+   - **Managing Followers and Following**: Users can retrieve lists of who they are following and who is following them, helping to build a sense of community on the platform.
+
+### 6. **MongoDB Schema Design**:
+   - **User Schema**: Includes fields for login, password, nickname, description, avatar, and background. It tracks the posts authored by each user, as well as their followers and the users they are following.
+   - **Post Schema**: Captures the title, content, and image of the post, with references to the author and associated comments and likes.
+   - **Comment Schema**: Stores content of the comment, linking it to both the post and the user who authored it.
+   - **Like Schema**: Tracks the relationship between users and the posts they like, ensuring that each like is unique to the user-post pair.
+   - **Follow Schema**: Records the follower-followed relationship between users, enabling the follow system functionality.
+
+### Key Features of the Blog Backend:
+   - **Security and Authentication**: JWT-based authentication ensures that only authorized users can perform actions such as creating posts, commenting, and liking.
+   - **Image Uploads**: Users can personalize their profiles by uploading avatars and background images, and they can also include images in their blog posts.
+   - **Efficient Data Management**: MongoDB’s flexible schema structure allows for fast and scalable storage of user, post, comment, like, and follow data, making the platform highly scalable.
+   - **User Interaction**: The system encourages user interaction through posts, comments, likes, and following, fostering a community-like environment for bloggers.
+
+This NestJS-based backend provides the foundation for a fully interactive blogging platform, balancing user-generated content, profile personalization, and social interaction, all while maintaining data integrity and security.
 
-##### API RENDER : **https://blog-iuef.onrender.com**
-
-
-*API HEROKU : **https://blog-camping-cbb2c4cfea86.herokuapp.com/*** 
-
-Required fields: **must be provided**
-Optional fields: **can be provided but not necessary**
-
-#### Users :
-
-**POST /users/sign-up:** Allows users to create a new account by providing necessary details.
-
-Required fields: **login, password, nickname**
-Optional fields: **description**
-
-**POST /users/login:** Allows users to log in by providing their credentials and returns an authentication token.
-Required fields: **login, password**
-
-**GET /users:** Retrieves a list of all users.
-
-**GET /users/user/:id :** Retrieves a specific user by their ID.
-**GET /users/current-user :**  Retrieves a logined in user by its ID.
-
-**PATCH /users/edit:** Updates the profile information of the authenticated user.
-
-Optional fields: **login, nickname, password, description**
-
-
-
-**POST /users/upload-avatar:** Allows authenticated users to upload a new avatar image.
-Optional fields: **avatar**
-
-**POST /users/upload-background:** Allows authenticated users to upload a new background image.
-Optional fields: **background**
-
-**DELETE /users/delete:** Deletes the profile of the authenticated user.
-
-#### Posts :
-
-**POST /posts/create:** Allows authenticated users to create a new post by providing post details and an optional image.
-
-Required fields: **title, content, image**
-
-**PATCH /posts/update/:postId:** Allows authenticated users to update an existing post
-
-Optional fields: **title, content, image**
-
-**GET /posts/post/:id :** Retrieves a specific post by its ID.
-
-**GET /posts/all/user/:id :** Retrieves all posts of one user.
-
-**GET /posts/all :** Retrieves all posts from the service
-
-**DELETE /posts/delete/post/:id** Delete post. It can do only user who created this post
-
-#### Comments :
-
-**POST /comments/add/post/:postId:** Allows authenticated users to add a comment to a specific post.
-Required fields: **content**
-
-**GET /comments/all/post/:postId:** Retrieves all comments associated with a specific post.
-
-**DELETE /comments/delete/:commentId:** Allows authenticated users to delete a comment by its ID, ensuring only the comment creator or post owner can perform this action.
-
-**PATCH /comments/update/:commentId:** Allows authenticated users to update the content of a comment, with validation to ensure only the comment creator or post owner can modify it.
-
-Optional fields: **content**
-
-#### Likes :
-
-**POST /likes/add/post/:postId:** Allows authenticated users to like a specific post, throwing an error if they've already liked it, and updating the post's likes count accordingly.
-
-**DELETE /likes/delete/post/:postId:** Enables authenticated users to remove their like from a post, updating the post's likes count and removing the like from the database.
-
-**GET /likes/all/post/:postId:** Get count of likes of one post
-
-
-#### Following/followers :
-
-**POST /follow/user/:userId:** Allows authenticated users to follow another user identified by userId, ensuring that they are not already following the user.
-
-**DELETE /follow/delete/user/:userId:** Enables authenticated users to unfollow a user identified by userId, verifying that they are currently following the user.
-
-**GET /follow/user/followers:** Retrieves the list of followers for the authenticated user, based on their user ID .
-
-**GET /follow/user/following:** Retrieves the list of users whom the authenticated user is following, based on their user ID.
-
-**GET /followers/user/:userId :**  retrieves a list of followers for the specified user ID.
-
-**GET /following/user/:userId :** also  fetches a list of users that the specified user ID is following.
-
-
-
-
-
-
-### MongoDB Schemas description:
-
-##### User
-
-*Fields*:
-
-**login:**
-
-*Type*: string
-*Required*: true
-*Unique*: true
-*Description*: Represents the user's login credentials.
-
-**password:**
-*Type*: string
-*MinLength*: 5
-*Required*: true
-*Description*: Stores the user's password.
-
-**nickname:**
-*Type*: string
-*Required*: true
-*Unique*: true
-*Description*: Holds the user's nickname.
-
-**description:**
-*Type*: string
-*Required*: false
-*Description*: A brief description or bio of the user.
-
-**avatar:**
-*Type*: string
-*Required*: false
-*Description*: URL of the user's avatar image.
-
-**background:**
-*Type*: string
-*Required*: false
-*Description*: URL of the user's background image.
-
-**posts:**
-*Type*: Array of Post references
-*Required*: false
-*Description*: References to posts made by the user.
-
-
-**created_at:**
-*Type*: Date
-*Default*: Date.now
-*Description*: Timestamp indicating when the user account was created.
-
-##### Post:
-
-
-*Fields*:
-
-**title:**
-*Type*: string
-*Required*: true
-*Description*: The title of the post.
-
-**content:**
-*Type*: string
-*Required*: true
-*Description*: The content of the post.
-
-**image:**
-*Type*: string
-*Required*: true
-*Description*: URL of the image associated with the post.
-
-**userId:**
-*Type*: ObjectId (reference to User)
-*Required*: true
-*Description*: Reference to the user who created the post.
-
-**comments:**
-*Type*: Array of Comment references
-*Required*: false
-*Description*: References to comments made on the post.
-
-**likes:**
-*Type*: Array of Like references
-*Required*: false
-*Description*: References to likes received by the post.
-
-**created_at:**
-*Type*: Date
-*Default*: Date.now
-*Description*: Timestamp indicating when the post was created.
-
-##### Comment:
-
-*Fields*:
-
-**content:**
-*Type*: string
-*Required*: true
-*Description*: The content of the comment.
-
-**userId:**
-*Type*: ObjectId (reference to User)
-*Required*: true
-*Description*: Reference to the user who made the comment.
-
-**postId:**
-*Type*: ObjectId (reference to Post)
-*Required*: true
-*Description*: Reference to the post on which the comment was made.
-
-**created_at:**
-*Type*: Date
-*Default*: Date.now
-*Description*: Timestamp indicating when the comment was created.
-
-
-##### Follow:
-*Fields*:
-
-**followerId:**
-*Type*: ObjectId (reference to User)
-*Required*: true
-*Description*: Reference to the user who is following another user.
-
-**followedById:**
-*Type*: ObjectId (reference to User)
-*Required*: true
-*Description*: Reference to the user who is being followed by another user.
-
-##### Like:
-*Fields*:
-
-**postId:**
-*Type*: ObjectId (reference to Post)
-*Required*: true
-*Description*: Reference to the post that received the like.
-
-**userId:**
-*Type*: ObjectId (reference to User)
-*Required*: true
-*Description*: Reference to the user who gave the like.
